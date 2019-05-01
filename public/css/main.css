@@ -1,0 +1,24 @@
+.dropdown-current-user {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background: none;
+}
+
+
+.card-shadow {
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    background: #fff;
+}
+
+.list-shadow {
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    background: #fff;
+    border-left: 5px #4e73df solid;
+    border-radius: 10px;
+}

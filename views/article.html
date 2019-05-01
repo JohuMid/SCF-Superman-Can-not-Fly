@@ -1,0 +1,112 @@
+{{extend './_layouts/home.html'}}
+
+{{block 'title'}}{{'SCF - 文章'}}{{/block}}
+
+{{block 'body'}}
+<div class="container bs-docs-container">
+    <div class="col-md-9 card-shadow"
+         style="border-radius: 10px; padding-bottom: 30px;padding-top: 10px; margin-bottom: 10px; border-top: 5px #286090 solid">
+        <div class="page-header">
+            <h1 id="theme">
+                默认标题
+            </h1>
+            <small id="date">Subtext for header</small>发布
+
+        </div>
+        <div class="media" style="margin-top: 30px;">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" data-src="holder.js/64x64" alt="64x64"
+                         src="../public/img/avatar-default.png" data-holder-rendered="true"
+                         style="width: 64px; height: 64px;">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4>作者：</h4>    <h4 class="media-heading" id="nickname">nickname：</h4>
+                <h4>正文：</h4>
+                <p id="article">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
+                    sollicitudin commodo.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
+                    vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 card-shadow" style="border-radius: 10px; border-top: 5px #449d44 solid; margin-bottom: 50px;">
+
+        <div class="input-group card-shadow" style="margin-top: 30px;margin-bottom: 10px;">
+            <input type="text" class="form-control" placeholder="楼主等你发言" aria-describedby="basic-addon2" id="chatbox">
+            <span class="input-group-addon" id="chat" style="background-color: #286090;color: white;cursor: pointer">发言</span>
+        </div>
+
+        <div class="panels">
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{{/block}}
+{{block 'script'}}
+<script>
+
+
+    $.ajax({
+        url: '/art',
+        type: 'post',
+        success: function (data) {
+            // console.log(data.data);
+            $('#theme').html(data.data.theme);
+            $('#date').html(now(data.data.last_modified_time));
+            $('#nickname').html(data.data.nickname);
+            $('#article').html(data.data.article);
+
+
+            for (i = 0; i < data.data.chat.length; i++) {
+
+
+                $('.panels').prepend(`
+                            <div class="panel panel-default list-shadow" style="margin-bottom: 10px;">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" src="../public/img/logo3.png" alt="..." style="width: 64px;">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading" style="line-height: 64px">` + JSON.parse(data.data.chat[i]).content + `</h4>
+            </div>
+        </div>
+                            `)
+            }
+
+            $('#chat').click(function () {
+                var chatbox = $('#chatbox').val();
+
+                $.ajax({
+                    url: '/chat',
+                    type: 'get',
+                    data: {
+                        id: data.data._id,
+                        chatbox: chatbox,
+                    },
+                    success: function (data) {
+                        var err_code = data.err_code;
+                        if (err_code === 0) {
+                            alert('评论发送成功！');
+                            window.location.href = '/article'
+                        }
+                    }
+                })
+            })
+        }
+    });
+
+
+</script>
+
+
+{{/block}}

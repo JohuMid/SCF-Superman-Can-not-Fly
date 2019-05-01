@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{block 'title'}}默认标题{{/block}}</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../public/css/navigation.css">
+    <link rel="stylesheet" href="../../public/css/main.css">
+    <style>
+        body{
+            font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        }
+    </style>
+
+    {{block 'head'}}{{/block}}
+</head>
+
+<body style="background: rgba(58,59,69,.15);">
+{{include '../_partials/header.html'}}
+{{block 'body'}}{{/block}}
+{{include '../_partials/footer.html'}}
+<script src="../../node_modules/jquery/dist/jquery.js"></script>
+<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="../../public/js/main.js"></script>
+{{block 'script'}}{{/block}}
+</body>
+
+</html>

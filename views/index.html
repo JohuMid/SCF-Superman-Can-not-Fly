@@ -1,0 +1,136 @@
+{{extend './_layouts/home.html'}}
+
+{{block 'title'}}{{'SCF - 首页'}}{{/block}}
+
+
+{{block 'body'}}
+<section class="container" >
+    <ul class="media-list" style="margin-bottom: 100px;">
+    </ul>
+    <nav aria-label="Page navigation" class="pull-left">
+        <div id="page" class="page"></div>
+    </nav>
+</section>
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../public/js/jquery.cookie.js"></script>
+
+<script>
+
+    var aj = [];
+    var num = [];
+
+    $.ajax({
+        url: '/',
+        type: 'post',
+        success: function (res, err) {
+            // console.log(res);
+            aj.push(res.aa);
+
+            if (err) {
+                console.log(err);
+            }
+            // 页码
+            var oPage = $(".page");
+
+            getPage();
+
+            function getPage() {
+                var pageNum = parseInt(res.aa.length / 10);
+                for (var i = 0; i < pageNum + 1; i++) {
+                    //添加页码
+                    var $a = $("<a>" + (i + 1) + "</a>");
+                    $a.attr({
+                        src: "javascript:;",
+                        class: "page_number"
+                    });
+                    oPage.append($a);
+                    if (i === 0) {
+                        $a.addClass("current");
+                    }
+                }
+            }
+
+            getMsgList(1);
+
+            function getMsgList(number) {
+                num = [];
+                num.push(number);
+
+                var count = ((number == Math.ceil(res.aa.length / 10)) ? (parseInt(res.aa.length % 10)) : 10);
+
+                for (i = (number - 1) * 10; i < ((number - 1) * 10 + count); i++) {
+                    $('.media-list').append(`
+                    <li class="media list-shadow" style="line-height: 38px;">
+            <div class="pull-left" style="margin-left: 20px; margin-top: 20px;">
+                <a href="#">
+                    <img width="40" height="40" class="media-object" src="../public/img/logo3.png" alt="...">
+                </a>
+            </div>
+            <div class="media-body" >
+                <h4 class="media-heading" style="margin-top: 20px;"><a href="/article">` + res.aa[i].theme + `</a></h4>
+                <p>` + res.aa[i].nickname + ` 发布了文章 • ` + now(res.aa[i].last_modified_time) + `</p>
+            </div>
+        </li>
+                `)
+                }
+
+                console.log(res.aa[i].last_modified_time);
+            }
+
+
+            $(".container").delegate(".page_number", "click", function () {
+                // 设置选中状态
+                $(this).addClass("current");
+                // 排它
+                $(this).siblings().removeClass("current");
+                $('.media-list').html("");
+
+                num = [];
+                // 添加新数据
+                getMsgList($(this).text());
+
+                // console.log($(this).text());
+                num.push($(this).text())
+            });
+        }
+    });
+
+
+    //监听文章点击
+    $(".media-list").delegate(".media-heading", "click", function () {
+        // alert(num);
+
+
+        window.event ? window.event.cancelBubble = true : e.stopPropagation();
+        var articleIndex = $(".media-heading").index($(this));
+
+
+        // $.addCookie("pageNumber", num[0]);
+        // window.location.hash = $(this).html();
+
+        // document.cookie="pageNumber=num[0]"
+
+
+        var id = aj[0][articleIndex + 10 * (num[0] - 1)]._id;
+
+        // alert(id);
+        $.ajax({
+            url: '/art',
+            type: 'get',
+            data: {
+                id: id,
+            },
+            success: function (err, data) {
+                // console.log(data);
+                if (err) {
+                    console.log(err);
+                }
+            }
+        })
+    });
+
+
+
+
+</script>
+{{/block}}

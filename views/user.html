@@ -1,0 +1,75 @@
+{{extend './_layouts/home.html'}}
+
+{{block 'title'}}{{'SCF - 首页'}}{{/block}}
+
+{{block 'body'}}
+
+<div class="container">
+    <div class="col-md-3 ">
+        <div class="list-group card-shadow " style="border-radius: 5px">
+
+            <a href="#" class="list-group-item">个人资料</a>
+            <a href="#" class="list-group-item">我的文章</a>
+            <a href="#" class="list-group-item">我的收藏</a>
+            <a href="#" class="list-group-item">我的关注</a>
+        </div>
+    </div>
+    <div class="col-md-9  card-shadow" style="border-radius: 5px; padding-bottom: 30px;">
+        <div class="page-header">
+            <h3>个人资料</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <div class="media-left">
+                    <a href="#">
+                        <img style="width: 100px;" class="media-object" src="../public/img/logo3.png" alt="...">
+                    </a>
+                    <a href="#" class="" style="margin-left: 20px;">
+                        修改头像
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="media-body card-shadow"
+                     style="margin-bottom: 30px; border-radius: 5px; color: #929292;padding: 20px;">
+                    <h4 class="media-heading">账户创建时间：<span id="createtime"></span></h4>
+                    <h4 class="media-heading">账户ID：<span id="id"></span></h4>
+                </div>
+                <br>
+
+                <div class="media-body">
+                    <h4 class="media-heading">昵称：<span id="nickname"></span></h4>
+                    <h4 class="media-heading">邮箱：<span id="email"></span></h4>
+                    <h4 class="media-heading">性别：<span id="sex"></span></h4>
+                    <h4 class="media-heading">生日：<span id="birthday"></span></h4>
+                    <h4 class="media-heading">地区：<span id="location"></span></h4>
+                    <h4 class="media-heading">行业：<span id="job"></span></h4>
+                    <h4 class="media-heading">职位：<span id="position"></span></h4>
+                    <h4 class="media-heading">简介：<span id="brief"></span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/block}}
+{{block 'script'}}
+<script>
+
+    $.ajax({
+        url: '/userdata',
+        type: 'get',
+        success: function (data) {
+            console.log(data);
+            console.log(data.user.nickname);
+            $('#nickname').html(data.user.nickname);
+            $('#email').html(data.user.email);
+            $('#createtime').html(now(data.user.last_modified_time));
+            $('#id').html(data.user._id);
+
+        }
+    })
+
+</script>
+{{/block}}

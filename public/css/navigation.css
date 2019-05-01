@@ -1,0 +1,32 @@
+
+.page{
+    width: 1000px;
+    height: 40px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 10px;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 60px;
+}
+.page>.page_number{
+    text-decoration: none;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 20px;
+    color: #2b2b2b;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.page>.page_number:hover{
+    background-color: #3380bc;
+    color: white;
+}
+.page>.current{
+    background-color: #08cfe0;
+    color: white;
+}

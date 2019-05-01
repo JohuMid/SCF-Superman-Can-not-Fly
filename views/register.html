@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>注册</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../public/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">创建一个账户！</h1>
+                        </div>
+                        <form class="user" id="register_form">
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-user" id="nickname"
+                                       placeholder="请输入昵称" name="nickname">
+                            </div>
+                            <div class="form-group ">
+                                <input type="email" class="form-control form-control-user" id="email"
+                                       placeholder="请输入邮箱地址" name="email">
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="password" class="form-control form-control-user"
+                                           id="password" placeholder="请输入密码" name="password">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control form-control-user" id="vecode"
+                                           placeholder="输入验证码" name="vecode">
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="btn btn-primary btn-user btn-block" id="getvecode">获取验证码</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                注册
+                            </button>
+
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="/forgetpsd">忘记密码？</a>
+                        </div>
+                        <div class="text-center">
+                            <a class="small" href="/login">已经有账户？立即登录！</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script>
+
+    var regEmailExp = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
+
+    var regPsdExp = /^(?!([a-zA-Z]+|\d+)$)[a-zA-Z\d]{6,20}$/;
+    //密码纯数字正则-验证六位数字-相当于六位验证码正则
+    var regCodeExp = /^\d{6}$/;
+
+    $('#getvecode').click(function () {
+        var email = $('#email').val();
+        var nickname = $('#nickname').val();
+        var password = $('#password').val();
+        var code = $('#vecode').val();
+
+        if (nickname == null) {
+            alert('昵称未填写！');
+        } else if (!regEmailExp.test(email)) {
+            alert("邮箱格式不正确")
+        } else if (!regPsdExp.test(password)) {
+            alert("密码至少六位（包含数字与字母）");
+        } else {
+            $.ajax({
+                url: '/email',
+                type: 'get',
+                data: {
+                    nickname: nickname,
+                    email: email,
+                },
+                success: function () {
+                    window.alert('验证码发送成功，请在邮箱查看');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+    });
+
+    $('#register_form').on('submit', function (e) {
+
+        e.preventDefault()
+        var formData = $(this).serialize()
+
+        //表单数据
+        // console.log(formData);
+        if ($('#nickname').val() === '') {
+            window.alert('昵称未填写')
+        } else if ($('#email').val() === '') {
+            window.alert('邮箱未填写')
+        } else if ($('#password').val() === '') {
+            window.alert('密码未填写')
+        } else if ($('#vecode').val() === '') {
+            //验证码必须约束六位
+            window.alert('验证码未填写')
+        } else {
+            $.ajax({
+                url: '/register',
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (data) {
+                    var err_code = data.err_code;
+                    if (err_code === 0) {
+                        window.alert('注册成功！');
+                        // 服务端重定向针对异步请求无效
+                        //直接用系统的跳转网址
+                        window.location.href = '/'
+                    } else if (err_code === 1) {
+                        window.alert('邮箱或昵称已存在！')
+                    } else if (err_code === 2) {
+                        window.alert('验证码输入错误！')
+                    } else if (err_code === 500) {
+                        window.alert('服务器忙，请稍后重试！')
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+
+</html>

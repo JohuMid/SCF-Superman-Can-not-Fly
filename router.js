@@ -164,7 +164,7 @@ router.get('/email', function (req, res) {
 
     var mail = {
         // 发件人
-        from: '<17782161804@163.com>',
+        from: '<你的邮箱>',
         // 主题
         subject: 'cast验证码',
         // 收件人
@@ -202,7 +202,7 @@ router.get('/repsd', function (req, res, next) {
 
     var mail = {
         // 发件人
-        from: '<17782161804@163.com>',
+        from: '<你的邮箱>',
         // 主题
         subject: 'cast密码修改验证码',
         // 收件人
